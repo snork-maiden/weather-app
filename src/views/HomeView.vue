@@ -1,13 +1,12 @@
 <script setup lang="ts">
+import SearchForm from "@/components/SearchForm.vue";
 import TheWeather from "../components/TheWeather.vue";
 </script>
 
 <template>
   <header class="header">
     <nav class="page-nav">
-      <RouterLink class="page-nav__link" to="/search"
-        >Weather in the other location</RouterLink
-      >
+      <SearchForm></SearchForm>
     </nav>
   </header>
   <main>
