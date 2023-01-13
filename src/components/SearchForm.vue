@@ -1,9 +1,13 @@
 <script setup lang="ts">
-import { getGeolocationFromCityName } from "@/services/openWeatherAPI.vue";
+import {
+  getCurrentWeather,
+  getForecast,
+  getGeolocationFromCityName,
+} from "@/services/openWeatherAPI.vue";
 import { ref, watch, type Ref } from "vue";
+import { useWeatherStore } from "./stores/WeatherStore";
 
-getGeolocationFromCityName("Moscow").then((data) => {});
-
+const WeatherStore = useWeatherStore();
 let cityName: Ref<string> = ref("");
 let cities: Ref<Array<any>> = ref([]);
 
@@ -11,14 +15,30 @@ async function getCities(city: string) {
   cities.value = await getGeolocationFromCityName(city);
 }
 function getCountryName(countryCode: string): string {
+  // @ts-ignore
   const regionNames = new Intl.DisplayNames(["en"], { type: "region" });
   return regionNames.of(countryCode);
+}
+
+async function onSubmit(): Promise<void> {
+  const city = cities.value[0];
+  WeatherStore.currentCityWeather = await getCurrentWeather(city.lat, city.lon);
+  WeatherStore.currentCityForecast = await getForecast(
+    city.latitude,
+    city.longitude
+  );
+}
+
+async function getWeather(city: any): Promise<void> {
+  console.log(city);
+  WeatherStore.currentCityWeather = await getCurrentWeather(city.lat, city.lon);
+  WeatherStore.currentCityForecast = await getForecast(city.lat, city.lon);
 }
 
 watch(cityName, (city) => (city ? getCities(city) : (cities.value = [])));
 </script>
 <template>
-  <form class="search-form">
+  <form class="search-form" @submit.prevent="onSubmit">
     <label for="location-search">Search by location </label>
     <input
       class="search__field"
@@ -30,7 +50,7 @@ watch(cityName, (city) => (city ? getCities(city) : (cities.value = [])));
     />
     <button class="search__btn" type="submit">Search</button>
     <ul class="options" v-for="city in cities" :key="city.id">
-      <li class="option">
+      <li class="option" @click="getWeather(city)">
         {{
           city.state
             ? `${city.name}, ${city.state}, ${getCountryName(city.country)}`
