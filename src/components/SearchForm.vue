@@ -1,18 +1,16 @@
 <script setup lang="ts">
-import {
-  getCurrentWeather,
-  getForecast,
-  getGeolocationFromCityName,
-} from "@/services/openWeatherAPI.vue";
+import type { CityName } from "@/interfaces";
+import { getGeolocationsFromCityName } from "@/services/openWeatherAPI.vue";
 import { ref, watch, type Ref } from "vue";
 import { useWeatherStore } from "./stores/WeatherStore";
 
 const WeatherStore = useWeatherStore();
 let cityName: Ref<string> = ref("");
-let cities: Ref<Array<any>> = ref([]);
+let cities: Ref<Array<CityName>> = ref([]);
 
 async function getCities(city: string) {
-  cities.value = await getGeolocationFromCityName(city);
+  cities.value = (await getGeolocationsFromCityName(city)) || [];
+  console.log(cities.value[0]);
 }
 function getCountryName(countryCode: string): string {
   // @ts-ignore
@@ -20,19 +18,15 @@ function getCountryName(countryCode: string): string {
   return regionNames.of(countryCode);
 }
 
-async function onSubmit(): Promise<void> {
+function onSubmit(): void {
   const city = cities.value[0];
-  WeatherStore.currentCityWeather = await getCurrentWeather(city.lat, city.lon);
-  WeatherStore.currentCityForecast = await getForecast(
-    city.latitude,
-    city.longitude
-  );
+  WeatherStore.currentLongitude = city.lon;
+  WeatherStore.currentLatitude = city.lat;
 }
 
-async function getWeather(city: any): Promise<void> {
-  console.log(city);
-  WeatherStore.currentCityWeather = await getCurrentWeather(city.lat, city.lon);
-  WeatherStore.currentCityForecast = await getForecast(city.lat, city.lon);
+function getWeather(city: any): void {
+  WeatherStore.currentLongitude = city.lon;
+  WeatherStore.currentLatitude = city.lat;
 }
 
 watch(cityName, (city) => (city ? getCities(city) : (cities.value = [])));
@@ -72,22 +66,3 @@ watch(cityName, (city) => (city ? getCities(city) : (cities.value = [])));
   margin: auto;
 }
 </style>
-<!-- 
-country
-: 
-"RU"
-lat
-: 
-55.7504461
-local_names
-: 
-{tk: 'Moskwa', kn: 'ಮಾಸ್ಕೋ', lg: 'Moosko', ab: 'Москва', ky: 'Москва', …}
-lon
-: 
-37.6174943
-name
-: 
-"Moscow"
-state
-: 
-"Moscow" -->

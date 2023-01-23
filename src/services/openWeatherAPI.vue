@@ -1,15 +1,20 @@
 <script lang="ts">
+import type { CityName } from "@/interfaces";
+
 const APIkey = "befbb98322b707ea44a5577b13b8c97f";
 
-export async function getGeolocationFromCityName(
+export async function getGeolocationsFromCityName(
   city: string
-): Promise<Array<object>> {
+): Promise<Array<CityName> | null> {
   let response = await fetch(
     `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=7&appid=${APIkey}`
   );
-
-  const cities = await response.json();
-  return cities;
+  if (response.ok) {
+    const cities = await response.json();
+    return cities;
+  }
+  console.log("HTTP Error: " + response.status);
+  return null;
 }
 
 export async function getCurrentWeather(latitude: number, longitude: number) {
