@@ -1,34 +1,49 @@
+import type { Weather } from "@/interfaces";
+import { getCurrentWeather, getForecast } from "@/services/openWeatherAPI.vue";
 import { defineStore } from "pinia";
 
-interface cityCoordinates {
-  latitude: 35.652832;
-  longitude: 139.839478;
+interface CityCoordinates {
+  latitude: number;
+  longitude: number;
 }
 
+const TokioCoordinates: CityCoordinates = {
+  latitude: 35.652832,
+  longitude: 139.839478,
+};
+
 interface Data {
-  currentLongitude: Promise<any> | number;
-  currentLatitude: Promise<any> | number;
+  coordinates: CityCoordinates;
+  weather: null | Weather;
+  forecast: null | Object;
 }
 
 export const useWeatherStore = defineStore("WeatherStore", {
   state: () => {
     const data: Data = {
-      currentLongitude: getCurrentCityByGeolocation().then(
-        (response) => response.longitude
-      ),
-      currentLatitude: getCurrentCityByGeolocation().then(
-        (response) => response.latitude
-      ),
+      coordinates: TokioCoordinates,
+      weather: null,
+      forecast: null,
     };
     return data;
   },
+  actions: {
+    async fill() {
+      this.coordinates = await getCurrentCityByGeolocation();
+      this.weather = await getCurrentWeather(
+        this.coordinates.latitude,
+        this.coordinates.longitude
+      );
+      this.forecast = await getForecast(
+        this.coordinates.latitude,
+        this.coordinates.longitude
+      );
+    },
+  },
 });
 
-async function getCurrentCityByGeolocation(): Promise<cityCoordinates> {
-  const TokioCoordinates: cityCoordinates = {
-    latitude: 35.652832,
-    longitude: 139.839478,
-  };
+async function getCurrentCityByGeolocation(): Promise<CityCoordinates> {
+  useWeatherStore();
   const IPGeolocationAPIcode = "d33e8aedf0d941fc989f94c53ea1da4e";
   const response = await fetch(
     `https://api.geoapify.com/v1/ipinfo?apiKey=${IPGeolocationAPIcode}`,
@@ -44,7 +59,6 @@ async function getCurrentCityByGeolocation(): Promise<cityCoordinates> {
       longitude: json.location.longitude,
     };
   } else {
-    console.log("HTTP Error: " + response.status);
     return TokioCoordinates;
   }
 }

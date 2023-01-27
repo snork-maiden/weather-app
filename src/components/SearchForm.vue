@@ -20,13 +20,17 @@ function getCountryName(countryCode: string): string {
 
 function onSubmit(): void {
   const city = cities.value[0];
-  WeatherStore.currentLongitude = city.lon;
-  WeatherStore.currentLatitude = city.lat;
+  WeatherStore.coordinates = {
+    longitude: city.lon,
+    latitude: city.lat,
+  };
 }
 
 function getWeather(city: any): void {
-  WeatherStore.currentLongitude = city.lon;
-  WeatherStore.currentLatitude = city.lat;
+  WeatherStore.coordinates = {
+    longitude: city.lon,
+    latitude: city.lat,
+  };
 }
 
 watch(cityName, (city) => (city ? getCities(city) : (cities.value = [])));

@@ -1,11 +1,14 @@
 <script setup lang="ts">
+import { ref, type Ref } from "vue";
 import { useWeatherStore } from "./stores/WeatherStore";
 
+const weatherStore = useWeatherStore();
+weatherStore.fill();
 </script>
 
 <template>
   <article class="city-weather">
-    <h2 class="city">Erevan</h2>
+    <h2 class="city">{{ weatherStore.weather?.name }}</h2>
     <svg
       aria-describedby="weather-state"
       class="weather-state-img"
