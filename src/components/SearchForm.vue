@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import type { CityName } from "@/interfaces";
-import { getGeolocationsFromCityName } from "@/services/openWeatherAPI.vue";
+import {
+  getCurrentWeather,
+  getForecast,
+  getGeolocationsFromCityName,
+} from "@/services/openWeatherAPI.vue";
 import { ref, watch, type Ref } from "vue";
 import { useWeatherStore } from "./stores/WeatherStore";
 
-const WeatherStore = useWeatherStore();
+const weatherStore = useWeatherStore();
 let cityName: Ref<string> = ref("");
 let cities: Ref<Array<CityName>> = ref([]);
 
@@ -19,18 +23,19 @@ function getCountryName(countryCode: string): string {
 }
 
 function onSubmit(): void {
-  const city = cities.value[0];
-  WeatherStore.coordinates = {
-    longitude: city.lon,
-    latitude: city.lat,
-  };
+  const city: CityName = cities.value[0];
+  updateWeatherStoreData(city);
 }
 
-function getWeather(city: any): void {
-  WeatherStore.coordinates = {
+async function updateWeatherStoreData(city: CityName) {
+  weatherStore.coordinates = {
     longitude: city.lon,
     latitude: city.lat,
   };
+
+  weatherStore.weather = await getCurrentWeather(city.lat, city.lon);
+  weatherStore.forecast = await getForecast(city.lat, city.lon);
+  weatherStore.currentCityName = city.name;
 }
 
 watch(cityName, (city) => (city ? getCities(city) : (cities.value = [])));
@@ -48,7 +53,7 @@ watch(cityName, (city) => (city ? getCities(city) : (cities.value = [])));
     />
     <button class="search__btn" type="submit">Search</button>
     <ul class="options" v-for="city in cities" :key="city.id">
-      <li class="option" @click="getWeather(city)">
+      <li class="option" @click="updateWeatherStoreData(city)">
         {{
           city.state
             ? `${city.name}, ${city.state}, ${getCountryName(city.country)}`

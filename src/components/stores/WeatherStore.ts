@@ -16,6 +16,7 @@ interface Data {
   coordinates: CityCoordinates;
   weather: null | Weather;
   forecast: null | Object;
+  currentCityName: string;
 }
 
 export const useWeatherStore = defineStore("WeatherStore", {
@@ -24,6 +25,7 @@ export const useWeatherStore = defineStore("WeatherStore", {
       coordinates: TokioCoordinates,
       weather: null,
       forecast: null,
+      currentCityName: "Tokio",
     };
     return data;
   },
@@ -38,6 +40,7 @@ export const useWeatherStore = defineStore("WeatherStore", {
         this.coordinates.latitude,
         this.coordinates.longitude
       );
+      this.currentCityName = this.weather?.name || "";
     },
   },
 });

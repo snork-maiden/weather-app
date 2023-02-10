@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import { ref, type Ref } from "vue";
+// import { ref, type Ref } from "vue";
 import { useWeatherStore } from "./stores/WeatherStore";
 
 const weatherStore = useWeatherStore();
 weatherStore.fill();
+console.log(weatherStore.weather);
 </script>
 
 <template>
   <article class="city-weather">
-    <h2 class="city">{{ weatherStore.weather?.name }}</h2>
+    <h2 class="city">{{ weatherStore.currentCityName }}</h2>
     <svg
       aria-describedby="weather-state"
       class="weather-state-img"
@@ -20,8 +21,17 @@ weatherStore.fill();
         d="M28.74 9.38A7.5 7.5 0 0 0 14.32 5.3a4.95 4.95 0 0 0-8.27 3.02A6.86 6.86 0 0 0 6.8 22h18.25a6.85 6.85 0 0 0 3.69-12.62z"
       />
     </svg>
-    <div class="temperature">3 <sup>°C</sup></div>
-    <p class="weather-state-name" id="weather-state">Cloudy</p>
+    <div class="temperature">
+      {{
+        weatherStore.weather?.main.temp
+          ? Math.round(weatherStore.weather?.main.temp)
+          : 0
+      }}
+      <sup>°C</sup>
+    </div>
+    <p class="weather-state-name" id="weather-state">
+      {{ weatherStore.weather?.weather[0].main }}
+    </p>
 
     <label for="day-view" class="tab-name">Day forecast</label>
     <input type="radio" name="tab" id="day-view" class="tab" /><label
