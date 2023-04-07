@@ -1,26 +1,51 @@
 <script setup lang="ts">
 // import { ref, type Ref } from "vue";
 import { useWeatherStore } from "./stores/WeatherStore";
+import WeatherTabs from "./WeatherTabs.vue";
+
 
 const weatherStore = useWeatherStore();
 weatherStore.fill();
-console.log(weatherStore.weather);
+
+function transformWeatherName(weather: string) {
+  const weatherTypes: { [key: string]: string } = {
+    "clear sky": "Clear",
+    "few clouds": "Mostly clear",
+    "scattered clouds": "Cloudy",
+    "broken clouds": "Partly cloudy",
+    "shower rain": "Heavy rain",
+    rain: "Rainy",
+    thunderstorm: "Thunderstorm",
+    snow: "Snowy",
+    mist: "Misty",
+  };
+  return weatherTypes[weather] || "";
+}
 </script>
 
 <template>
   <article class="city-weather">
     <h2 class="city">{{ weatherStore.currentCityName }}</h2>
-    <svg
-      aria-describedby="weather-state"
-      class="weather-state-img"
-      xmlns="http://www.w3.org/2000/svg"
-      xml:space="preserve"
-      viewBox="0 0 31.85 22"
-    >
-      <path
-        d="M28.74 9.38A7.5 7.5 0 0 0 14.32 5.3a4.95 4.95 0 0 0-8.27 3.02A6.86 6.86 0 0 0 6.8 22h18.25a6.85 6.85 0 0 0 3.69-12.62z"
-      />
-    </svg>
+
+    <div class="weather-state">
+      <!--Created with Vectornator (http://vectornator.io/)-->
+      <svg
+        class="weather-state-img cloud"
+        xmlns="http://www.w3.org/2000/svg"
+        xml:space="preserve"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-miterlimit="10"
+        clip-rule="evenodd"
+        viewBox="0 0 259.442 218.331"
+        fill="#8ddeeb"
+      >
+        <path
+          d="M209.167 97.24c.804-3.037 1.281-6.205 1.293-9.483.077-21.498-17.953-38.99-40.271-39.07a41.281 41.281 0 0 0-20.996 5.626c-9.046-14.54-25.487-24.33-44.365-24.397-28.695-.103-52.037 22.22-52.136 49.862-.017 4.834.717 9.496 2.029 13.924-20.979 4.136-36.795 21.971-36.872 43.414-.088 24.568 20.52 44.561 46.024 44.653l138.551.496v-.092c.643.028 1.274.097 1.924.099 24.443.088 44.328-18.93 44.412-42.475.079-22.077-17.279-40.297-39.593-42.557Z"
+        />
+      </svg>
+    </div>
+
     <div class="temperature">
       {{
         weatherStore.weather?.main.temp
@@ -30,16 +55,12 @@ console.log(weatherStore.weather);
       <sup>°C</sup>
     </div>
     <p class="weather-state-name" id="weather-state">
-      {{ weatherStore.weather?.weather[0].main }}
+      {{
+        transformWeatherName(weatherStore.weather?.weather[0].description || "")
+      }}
     </p>
 
-    <label for="day-view" class="tab-name">Day forecast</label>
-    <input type="radio" name="tab" id="day-view" class="tab" /><label
-      for="week-view"
-      class="tab-name"
-      >Week forecast</label
-    >
-    <input type="radio" name="tab" id="week-view" class="tab" />
+    <WeatherTabs></WeatherTabs>
   </article>
 </template>
 <style lang="scss">
