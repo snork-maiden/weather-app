@@ -1,4 +1,4 @@
-import type { Weather } from "@/interfaces";
+import type { Weather, Forecast } from "@/interfaces";
 import { getCurrentWeather, getForecast } from "@/services/openWeatherAPI.vue";
 import { defineStore } from "pinia";
 
@@ -14,33 +14,43 @@ const TokioCoordinates: CityCoordinates = {
 
 interface Data {
   coordinates: CityCoordinates;
-  weather: null | Weather;
-  forecast: null | Object;
-  currentCityName: string;
+  forecast: Forecast | null;
+  weather: Weather | null;
 }
 
 export const useWeatherStore = defineStore("WeatherStore", {
   state: () => {
     const data: Data = {
       coordinates: TokioCoordinates,
-      weather: null,
       forecast: null,
-      currentCityName: "Tokio",
+      weather: null,
     };
     return data;
   },
   actions: {
     async fill() {
       this.coordinates = await getCurrentCityByGeolocation();
-      this.weather = await getCurrentWeather(
+      const weather = await getCurrentWeather(
         this.coordinates.latitude,
         this.coordinates.longitude
       );
-      this.forecast = await getForecast(
+      this.weather = weather;
+      const forecast = await getForecast(
         this.coordinates.latitude,
         this.coordinates.longitude
       );
-      this.currentCityName = this.weather?.name || "";
+      this.forecast = forecast;
+    },
+  },
+  getters: {
+    getForecast(state) {
+      return state.forecast;
+    },
+    getWeather(state) {
+      return state.weather;
+    },
+    currentCityName(state) {
+      return state.weather?.name || "";
     },
   },
 });

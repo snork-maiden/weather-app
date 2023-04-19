@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import type { CityName } from "@/interfaces";
-import {
-  getCurrentWeather,
-  getForecast,
-  getGeolocationsFromCityName,
-} from "@/services/openWeatherAPI.vue";
+import { getGeolocationsFromCityName } from "@/services/openWeatherAPI.vue";
 import { ref, watch, type Ref } from "vue";
 import { useWeatherStore } from "./stores/WeatherStore";
 
@@ -32,10 +28,6 @@ async function updateWeatherStoreData(city: CityName) {
     longitude: city.lon,
     latitude: city.lat,
   };
-
-  weatherStore.weather = await getCurrentWeather(city.lat, city.lon);
-  weatherStore.forecast = await getForecast(city.lat, city.lon);
-  weatherStore.currentCityName = city.name;
 }
 
 watch(cityName, (city) => (city ? getCities(city) : (cities.value = [])));

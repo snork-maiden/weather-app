@@ -1,25 +1,13 @@
 <script setup lang="ts">
-// import { ref, type Ref } from "vue";
+import { WeatherTypes } from "@/enums";
 import { useWeatherStore } from "./stores/WeatherStore";
 import WeatherTabs from "./WeatherTabs.vue";
-
 
 const weatherStore = useWeatherStore();
 weatherStore.fill();
 
-function transformWeatherName(weather: string) {
-  const weatherTypes: { [key: string]: string } = {
-    "clear sky": "Clear",
-    "few clouds": "Mostly clear",
-    "scattered clouds": "Cloudy",
-    "broken clouds": "Partly cloudy",
-    "shower rain": "Heavy rain",
-    rain: "Rainy",
-    thunderstorm: "Thunderstorm",
-    snow: "Snowy",
-    mist: "Misty",
-  };
-  return weatherTypes[weather] || "";
+function transformWeatherName(weather: string): string {
+  return WeatherTypes[weather as keyof typeof WeatherTypes] || "";
 }
 </script>
 

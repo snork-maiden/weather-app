@@ -1,3 +1,5 @@
+import type { WeatherTypes } from "./enums";
+
 export interface CityName {
   country: string;
   state: string;
@@ -16,20 +18,27 @@ export interface Weather {
     feels_like: number;
     temp_min: number;
     temp_max: number;
+    [propName: string]: any;
   };
-  name: "Yerevan";
+  name: string;
   sys: {
-    type: 1;
-    id: 8851;
-    country: "AM";
-    sunrise: 1674533870;
-    sunset: 1674569387;
+    type: number;
+    id: number;
+    country: string;
+    sunrise: number;
+    sunset: number;
   };
-  timezone: 14400;
-  visibility: 10000;
+  timezone: number;
+  visibility: number;
   weather: Array<WeatherItem>;
 
-  wind: { speed: number };
+  wind?: { speed: number; [propName: string]: any };
+  rain?: {
+    "1h": number;
+  };
+  snow?: {
+    "1h": number;
+  };
 }
 
 interface WeatherItem {
@@ -37,4 +46,33 @@ interface WeatherItem {
   icon: string;
   id: number;
   main: string;
+}
+
+export interface Forecast {
+  city: {
+    coord: { lat: number; lon: number };
+    country: string;
+    id: number;
+    name: string;
+    population: number;
+    sunrise: number;
+    sunset: number;
+    timezone: number;
+  };
+  list: Array<WeatherForecastItem>;
+  [propName: string]: any;
+}
+
+interface WeatherForecastItem extends Weather {
+  dt: number;
+  dt_txt: string;
+  pop: number;
+  [propName: string]: any;
+}
+
+export interface WeatherCardData {
+  main: string;
+  temp: number;
+  dt: number;
+  description: keyof typeof WeatherTypes;
 }
