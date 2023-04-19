@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref, type Ref } from "vue";
+import WeatherList from "./WeatherList.vue";
+
 let currentTab: Ref<"day" | "week"> = ref("day");
 </script>
 
@@ -24,7 +26,6 @@ let currentTab: Ref<"day" | "week"> = ref("day");
     v-model="currentTab"
   />
 
-  <template v-if="currentTab === 'day'"></template>
-  <template v-if="currentTab === 'week'"></template>
+  <WeatherList :current-tab="currentTab"></WeatherList>
 </template>
 <style lang="scss"></style>
