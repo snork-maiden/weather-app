@@ -42,7 +42,7 @@ export interface Weather {
 }
 
 interface WeatherItem {
-  description: string;
+  description: keyof typeof WeatherTypes;
   icon: string;
   id: number;
   main: string;
@@ -63,7 +63,7 @@ export interface Forecast {
   [propName: string]: any;
 }
 
-interface WeatherForecastItem extends Weather {
+export interface WeatherForecastItem extends Weather {
   dt: number;
   dt_txt: string;
   pop: number;
