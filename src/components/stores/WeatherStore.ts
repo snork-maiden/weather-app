@@ -1,5 +1,5 @@
 import type { Weather, Forecast } from "@/interfaces";
-import { getCurrentWeather, getForecast } from "@/services/openWeatherAPI.vue";
+import { getCurrentWeather, getForecast } from "@/services/openWeatherAPI";
 import { defineStore } from "pinia";
 
 interface CityCoordinates {

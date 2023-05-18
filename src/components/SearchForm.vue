@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { CityName } from "@/interfaces";
-import { getGeolocationsFromCityName } from "@/services/openWeatherAPI.vue";
 import { ref, watch, type Ref } from "vue";
 import { useWeatherStore } from "./stores/WeatherStore";
+import { getGeolocationsFromCityName } from "@/services/openWeatherAPI";
 
 const weatherStore = useWeatherStore();
 let cityName: Ref<string> = ref("");

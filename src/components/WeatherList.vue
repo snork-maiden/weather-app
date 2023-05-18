@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, type ComputedRef, type Ref } from "vue";
+/* __vue_virtual_code_placeholder__ */
+import type { ComputedRef, Ref } from "vue";
 import { useWeatherStore } from "./stores/WeatherStore";
 import { computed } from "vue";
 import type { WeatherCardData, WeatherForecastItem } from "@/interfaces";
