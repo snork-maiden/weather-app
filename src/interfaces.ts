@@ -75,4 +75,5 @@ export interface WeatherCardData {
   temp: number;
   dt: number;
   description: keyof typeof WeatherTypes;
+  type: "hours" | "days";
 }

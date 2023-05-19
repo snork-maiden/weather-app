@@ -4,6 +4,7 @@ import type { ComputedRef, Ref } from "vue";
 import { useWeatherStore } from "./stores/WeatherStore";
 import { computed } from "vue";
 import type { WeatherCardData, WeatherForecastItem } from "@/interfaces";
+import WeatherCard from "./WeatherCard.vue";
 
 const weatherStore = useWeatherStore();
 
@@ -30,6 +31,7 @@ function getHoursData(): Array<WeatherCardData> {
         temp: weatherItem.main.temp,
         dt: weatherItem.dt,
         description: weatherItem.weather[0].description,
+        type: "hours",
       };
       timeWeather.push(hourWeather);
     }
@@ -51,6 +53,17 @@ function getDaysData(): Array<WeatherCardData> {
 </script>
 
 <template>
-  <ul class="weather-list" v-for="weather of weathers" :key="weather.dt"></ul>
+  <ul class="weather-list">
+    <WeatherCard
+      v-for="weather of weathers"
+      :key="weather.dt"
+      :card-data="weather"
+    />
+  </ul>
 </template>
-<style lang="scss"></style>
+<style lang="scss">
+.weather-list {
+  display: flex;
+  gap: 0.5em;
+}
+</style>

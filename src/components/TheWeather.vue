@@ -48,8 +48,8 @@ function transformWeatherName(weather: string): string {
       }}
     </p>
 
-    <WeatherTabs></WeatherTabs>
   </article>
+  <WeatherTabs></WeatherTabs>
 </template>
 <style lang="scss">
 .weather-state-img {
