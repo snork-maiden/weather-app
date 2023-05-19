@@ -29,7 +29,7 @@ function getHoursData(): Array<WeatherCardData> {
       const hourWeather: WeatherCardData = {
         main: weatherItem.weather[0].main,
         temp: weatherItem.main.temp,
-        dt: weatherItem.dt,
+        datetime: weatherItem.dt * 1000,
         description: weatherItem.weather[0].description,
         type: "hours",
       };
@@ -47,6 +47,7 @@ function getHoursData(): Array<WeatherCardData> {
 // }
 
 function getDaysData(): Array<WeatherCardData> {
+  
   console.log(weatherStore.forecast);
   return [];
 }
@@ -56,7 +57,7 @@ function getDaysData(): Array<WeatherCardData> {
   <ul class="weather-list">
     <WeatherCard
       v-for="weather of weathers"
-      :key="weather.dt"
+      :key="weather.datetime"
       :card-data="weather"
     />
   </ul>

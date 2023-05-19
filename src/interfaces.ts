@@ -73,7 +73,7 @@ export interface WeatherForecastItem extends Weather {
 export interface WeatherCardData {
   main: string;
   temp: number;
-  dt: number;
+  datetime: number;
   description: keyof typeof WeatherTypes;
   type: "hours" | "days";
 }
