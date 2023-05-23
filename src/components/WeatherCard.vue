@@ -11,13 +11,11 @@ const weatherDate = ref(new Date(props.cardData.datetime));
 function getDateString(): string {
   if (cardData.value.type === "hours") {
     const getTimeString = weatherDate.value.getHours().toString();
-    console.log(weatherDate, getTimeString);
     return getTimeString;
   }
   const getWeekDayString = weatherDate.value.toLocaleDateString("en-GB", {
     weekday: "short",
   });
-  console.log(getWeekDayString);
   return getWeekDayString;
 }
 </script>

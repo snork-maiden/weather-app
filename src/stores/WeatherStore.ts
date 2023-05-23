@@ -7,13 +7,8 @@ interface CityCoordinates {
   longitude: number;
 }
 
-const TokioCoordinates: CityCoordinates = {
-  latitude: 35.652832,
-  longitude: 139.839478,
-};
-
 interface Data {
-  coordinates: CityCoordinates;
+  coordinates: CityCoordinates | null;
   forecast: Forecast | null;
   weather: Weather | null;
 }
@@ -21,7 +16,7 @@ interface Data {
 export const useWeatherStore = defineStore("WeatherStore", {
   state: () => {
     const data: Data = {
-      coordinates: TokioCoordinates,
+      coordinates: null,
       forecast: null,
       weather: null,
     };
@@ -72,6 +67,10 @@ async function getCurrentCityByGeolocation(): Promise<CityCoordinates> {
       longitude: json.location.longitude,
     };
   } else {
+    const TokioCoordinates: CityCoordinates = {
+      latitude: 35.652832,
+      longitude: 139.839478,
+    };
     return TokioCoordinates;
   }
 }

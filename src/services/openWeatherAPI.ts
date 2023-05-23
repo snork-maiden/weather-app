@@ -1,4 +1,9 @@
-import type { CityName, Weather, Forecast } from "@/interfaces";
+import type {
+  CityName,
+  Weather,
+  Forecast,
+  WeatherForecastItem,
+} from "@/interfaces";
 
 const APIkey = "befbb98322b707ea44a5577b13b8c97f";
 const baseURL = "https://api.openweathermap.org";
@@ -16,7 +21,7 @@ export async function getGeolocationsFromCityName(
     const cities = await response.json();
     return cities;
   }
-  console.log("HTTP Error: " + response.status);
+  console.error("HTTP Error: " + response.status);
   return null;
 }
 
@@ -33,7 +38,7 @@ export async function getCurrentWeather(
     const currentWeather = await response.json();
     return currentWeather;
   }
-  console.log("HTTP Error: " + response.status);
+  console.error("HTTP Error: " + response.status);
   return null;
 }
 
@@ -47,9 +52,13 @@ export async function getForecast(
 
   if (response.ok) {
     const forecast = await response.json();
+    forecast.list.forEach((item: WeatherForecastItem) => {
+      //s to ms
+      item.dt = item.dt * 1000;
+    });
     return forecast;
   }
-  console.log("HTTP Error: " + response.status);
+  console.error("HTTP Error: " + response.status);
   return null;
 }
 
