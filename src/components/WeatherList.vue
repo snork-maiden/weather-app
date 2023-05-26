@@ -117,9 +117,9 @@ function getDaysData(): Array<WeatherCardData> {
         return time >= 7 && time <= 22;
       });
 
-      calculateClouds(daytimeWeathers);
       const description =
         calculatePrecipitation(daytimeWeathers) ||
+        calculateMist(daytimeWeathers) ||
         calculateClouds(daytimeWeathers);
 
       return description;
@@ -156,6 +156,17 @@ function getDaysData(): Array<WeatherCardData> {
         if (averageClouds < 26) return "few clouds";
         if (averageClouds < 51) return "scattered clouds";
         return "broken clouds";
+      }
+
+      function calculateMist(
+        weathers: Array<WeatherForecastItem>
+      ): keyof typeof WeatherTypes | null {
+        const mists = weathers.filter(
+          (weather: WeatherForecastItem) =>
+            weather.weather[0].description === "mist"
+        );
+
+        return weathers.length - mists.length <= 3 ? "mist" : null;
       }
     }
   }
