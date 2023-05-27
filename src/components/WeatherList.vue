@@ -41,7 +41,6 @@ function getHoursData(): Array<WeatherCardData> {
 
 function getDaysData(): Array<WeatherCardData> {
   if (!weatherStore.forecast) return [];
-
   const nextDaysWeather: Array<WeatherForecastItem> =
     weatherStore.forecast.list.filter((item) => {
       let today = new Date().getDate();
@@ -182,6 +181,7 @@ function getDaysData(): Array<WeatherCardData> {
     />
   </ul>
 </template>
+
 <style lang="scss">
 .weather-list {
   display: flex;

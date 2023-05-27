@@ -3,18 +3,51 @@ import { WeatherTypes } from "@/enums";
 import { useWeatherStore } from "../stores/WeatherStore";
 import WeatherTabs from "./WeatherTabs.vue";
 import WeatherIcon from "./WeatherIcon.vue";
+import { computed } from "vue";
 
 const weatherStore = useWeatherStore();
 weatherStore.fill();
-
 function transformWeatherName(weather: string): string {
   return WeatherTypes[weather as keyof typeof WeatherTypes] || "";
+}
+
+const skyColorName = computed(() => calculateSkyColorName());
+function calculateSkyColorName(): "day" | "night" | "golden-hour" {
+  if (!weatherStore.weather?.dt) return "day";
+
+  const currentTimestamp = weatherStore.weather.dt;
+  if (
+    !(weatherStore.weather?.sys?.sunrise || weatherStore.weather?.sys?.sunset)
+  ) {
+    const hours = new Date(currentTimestamp * 1000).getHours();
+    if (hours > 21 || hours < 6) return "night";
+    return "day";
+  }
+
+  const sunriseTimestamp: number = weatherStore.weather.sys.sunrise;
+  const sunsetTimestamp: number = weatherStore.weather.sys.sunset;
+
+  const halfAnHourInSec = 30 * 60;
+  if (
+    Math.abs(sunriseTimestamp - currentTimestamp) <= halfAnHourInSec ||
+    Math.abs(sunsetTimestamp - currentTimestamp) <= halfAnHourInSec
+  )
+    return "golden-hour";
+
+  if (
+    currentTimestamp > sunriseTimestamp &&
+    currentTimestamp < sunsetTimestamp
+  ) {
+    return "day";
+  }
+
+  return "night";
 }
 </script>
 
 <template>
-  <article class="city-weather">
-    <h2 class="city">{{ weatherStore.currentCityName }}</h2>
+  <section class="city-weather">
+    <h1 class="city">{{ weatherStore.currentCityName }}</h1>
 
     <div class="weather-state">
       <WeatherIcon></WeatherIcon>
@@ -33,7 +66,8 @@ function transformWeatherName(weather: string): string {
         transformWeatherName(weatherStore.weather?.weather[0].description || "")
       }}
     </p>
-  </article>
+    {{ skyColorName }}
+  </section>
   <WeatherTabs></WeatherTabs>
 </template>
 <style lang="scss">

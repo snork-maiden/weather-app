@@ -12,7 +12,7 @@ export interface CityName {
 export interface Weather {
   clouds: { all: number };
   id: number;
-
+  dt: number;
   main: {
     temp: number;
     feels_like: number;
@@ -78,3 +78,4 @@ export interface WeatherCardData {
   description: keyof typeof WeatherTypes;
   type: "hours" | "days";
 }
+
