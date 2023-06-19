@@ -3,7 +3,7 @@ import { WeatherTypes } from "@/enums";
 import { useWeatherStore } from "../stores/WeatherStore";
 import WeatherTabs from "./WeatherTabs.vue";
 import WeatherIcon from "./WeatherIcon.vue";
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
 
 const weatherStore = useWeatherStore();
 weatherStore.fill();
@@ -12,6 +12,7 @@ function transformWeatherName(weather: string): string {
 }
 
 const skyColorName = computed(() => calculateSkyColorName());
+
 function calculateSkyColorName(): "day" | "night" | "golden-hour" {
   if (!weatherStore.weather?.dt) return "day";
 
@@ -43,6 +44,10 @@ function calculateSkyColorName(): "day" | "night" | "golden-hour" {
 
   return "night";
 }
+
+onMounted(() => {
+  document.body.classList.add(skyColorName.value);
+});
 </script>
 
 <template>
@@ -70,10 +75,11 @@ function calculateSkyColorName(): "day" | "night" | "golden-hour" {
   </section>
   <WeatherTabs></WeatherTabs>
 </template>
+
 <style lang="scss">
 .weather-state-img {
   width: 300px;
   height: 300px;
-  fill: var(--current-background);
+  fill: var(--cloud-color);
 }
 </style>
