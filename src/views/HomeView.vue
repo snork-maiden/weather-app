@@ -13,9 +13,8 @@ import TheWeather from "../components/TheWeather.vue";
     <TheWeather />
   </main>
 </template>
-<style lang="scss">
+<style scoped lang="scss">
 .header {
-  display: flex;
   padding-top: 1em;
   margin-bottom: 3em;
 }

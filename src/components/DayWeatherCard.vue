@@ -32,14 +32,12 @@ function getDateString(): string {
 
 <style scoped lang="scss">
 .card {
-  border: 1px solid var(--text-color);
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  border: 3px solid olive;
+  width: 10em;
+  aspect-ratio: 1/1;
 }
 .card svg {
-  width: 70px;
-  height: 70px;
+  width: 30px;
+  height: 30px;
 }
 </style>

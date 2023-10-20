@@ -182,9 +182,8 @@ function getDaysData(): Array<WeatherCardData> {
   </ul>
 </template>
 
-<style lang="scss">
+<style scoped lang="scss">
 .weather-list {
   display: flex;
-  gap: 0.5em;
 }
 </style>

@@ -7,7 +7,7 @@ import SearchForm from "@/components/SearchForm.vue";
   </main>
 </template>
 
-<style lang="scss">
+<style scoped lang="scss">
 .search {
   display: flex;
   min-height: 100vh;
