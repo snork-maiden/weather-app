@@ -18,7 +18,4 @@ import TheWeather from "../components/TheWeather.vue";
   padding-top: 1em;
   margin-bottom: 3em;
 }
-.page-nav {
-  margin-left: auto;
-}
 </style>

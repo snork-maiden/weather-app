@@ -4,7 +4,7 @@
   --sun-color: var(--day-sun);
   --moon-color: var(---day-background);
   --cloud-color: var(--day-cloud);
-  --text-color: var(--day-text-color)
+  --text-color: var(--day-text-color);
 
   --card-day-background: rgb(195, 237, 255);
   --card-night-background:rgba(10, 56, 71, 1);
@@ -62,13 +62,14 @@ body {
   display: flex;
   align-items: center;
   min-height: 100vh;
-  color: var(--text-color);
   width: 80vw;
-  margin: 0 auto;
-  color: var(--text-color);
+  padding: 1em 1.3em;
+
   background: var(--background);
   transition: color 0.5s, background-color 0.5s;
-  line-height: 1.6;
+  line-height: normal;
+
+  color: var(--text-color);
   font-family: 'Quicksand', sans-serif;
   font-size: 20px;
   text-rendering: optimizeLegibility;
