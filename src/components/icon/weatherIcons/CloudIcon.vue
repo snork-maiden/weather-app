@@ -18,7 +18,5 @@
 <style>
 svg {
   fill: var(--cloud-color);
-  width: 250px;
-  height: 250px;
 }
 </style>

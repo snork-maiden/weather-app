@@ -3,7 +3,7 @@
     <h1 class="city">{{ weatherStore.currentCityName }}</h1>
 
     <div class="icon">
-      <WeatherIcon></WeatherIcon>
+      <WeatherIcon :weather="weatherDescription"></WeatherIcon>
     </div>
 
     <div class="description">
@@ -15,11 +15,7 @@
         }}°C
       </div>
       <p class="weather" id="weather-state">
-        {{
-          transformWeatherName(
-            weatherStore.weather?.weather[0].description || ""
-          )
-        }}
+        {{ transformWeatherName(weatherDescription) }}
       </p>
     </div>
   </section>
@@ -29,17 +25,27 @@
 <script setup lang="ts">
 import { WeatherTypes } from "@/enums";
 import { useWeatherStore } from "../stores/WeatherStore";
-import WeatherIcon from "./icons/WeatherIcon.vue";
+import WeatherIcon from "./icon/WeatherIcon.vue";
 import { computed, watch } from "vue";
 import WeatherTabs from "./tabs/WeatherTabs.vue";
 
 const weatherStore = useWeatherStore();
 weatherStore.fill();
-function transformWeatherName(weather: string): string {
-  return WeatherTypes[weather as keyof typeof WeatherTypes] || "";
+
+function transformWeatherName(
+  weather: keyof typeof WeatherTypes
+): WeatherTypes {
+  return WeatherTypes[weather] || "";
 }
 
-const skyColorName = computed(() => calculateSkyColorName());
+const skyColorName = computed(calculateSkyColorName);
+
+const weatherDescription = computed(() => {
+  if (!weatherStore.weather?.weather) {
+    return "mist";
+  }
+  return weatherStore.weather.weather[0].description;
+});
 
 function calculateSkyColorName(): "day" | "night" | "golden-hour" {
   const currentTimestampInMs = new Date().getTime();
