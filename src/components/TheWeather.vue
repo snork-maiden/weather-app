@@ -1,9 +1,37 @@
+<template>
+  <section class="city-weather">
+    <h1 class="city">{{ weatherStore.currentCityName }}</h1>
+
+    <div class="icon">
+      <WeatherIcon></WeatherIcon>
+    </div>
+
+    <div class="description">
+      <div class="temperature">
+        {{
+          weatherStore.weather?.main.temp
+            ? Math.round(weatherStore.weather?.main.temp)
+            : 0
+        }}°C
+      </div>
+      <p class="weather" id="weather-state">
+        {{
+          transformWeatherName(
+            weatherStore.weather?.weather[0].description || ""
+          )
+        }}
+      </p>
+    </div>
+  </section>
+  <WeatherTabs></WeatherTabs>
+</template>
+
 <script setup lang="ts">
 import { WeatherTypes } from "@/enums";
 import { useWeatherStore } from "../stores/WeatherStore";
-import WeatherTabs from "./WeatherTabs.vue";
-import WeatherIcon from "./WeatherIcon.vue";
+import WeatherIcon from "./icons/WeatherIcon.vue";
 import { computed, watch } from "vue";
+import WeatherTabs from "./tabs/WeatherTabs.vue";
 
 const weatherStore = useWeatherStore();
 weatherStore.fill();
@@ -51,34 +79,6 @@ watch(calculateSkyColorName, () => {
   document.body.classList.add(skyColorName.value);
 });
 </script>
-
-<template>
-  <section class="city-weather">
-    <h1 class="city">{{ weatherStore.currentCityName }}</h1>
-
-    <div class="icon">
-      <WeatherIcon></WeatherIcon>
-    </div>
-
-    <div class="description">
-      <div class="temperature">
-        {{
-          weatherStore.weather?.main.temp
-            ? Math.round(weatherStore.weather?.main.temp)
-            : 0
-        }}°C
-      </div>
-      <p class="weather" id="weather-state">
-        {{
-          transformWeatherName(
-            weatherStore.weather?.weather[0].description || ""
-          )
-        }}
-      </p>
-    </div>
-  </section>
-  <WeatherTabs></WeatherTabs>
-</template>
 
 <style>
 .city-weather {

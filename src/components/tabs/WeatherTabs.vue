@@ -1,10 +1,3 @@
-<script setup lang="ts">
-import { ref, type Ref } from "vue";
-import WeatherList from "./WeatherList.vue";
-
-let currentTab: Ref<"day" | "week"> = ref("day");
-</script>
-
 <template>
   <div class="weather-cards">
     <div class="tabs">
@@ -32,6 +25,14 @@ let currentTab: Ref<"day" | "week"> = ref("day");
     <WeatherList :current-tab="currentTab"></WeatherList>
   </div>
 </template>
+
+<script setup lang="ts">
+import { ref, type Ref } from "vue";
+import WeatherList from "./WeatherList.vue";
+
+let currentTab: Ref<"day" | "week"> = ref("day");
+</script>
+
 <style scoped lang="scss">
 .tabs {
   display: flex;

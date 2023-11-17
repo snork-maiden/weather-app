@@ -74,7 +74,7 @@ export interface WeatherCardData {
   main: string;
   temp: number;
   minTemp?: number;
-  datetime: number;
+  dateTime: number;
   description: keyof typeof WeatherTypes;
   type: "hours" | "days";
 }

@@ -1,12 +1,22 @@
+<template>
+  <article class="card">
+    <h3 class="datetime">
+      <time :datetime="weatherDate.toDateString()">{{ getDateString() }}</time>
+    </h3>
+    <WeatherIcon />
+    <p>{{ Math.round(cardData.temp) }} C</p>
+  </article>
+</template>
+
 <script setup lang="ts">
 import type { WeatherCardData } from "@/interfaces";
-import WeatherIcon from "./WeatherIcon.vue";
 import { ref, type Ref } from "vue";
+import WeatherIcon from "../icons/WeatherIcon.vue";
 const props = defineProps<{
   cardData: WeatherCardData;
 }>();
 const cardData: Ref<WeatherCardData> = ref(props.cardData);
-const weatherDate = ref(new Date(props.cardData.datetime));
+const weatherDate = ref(new Date(props.cardData.dateTime));
 
 function getDateString(): string {
   if (cardData.value.type === "hours") {
@@ -19,16 +29,6 @@ function getDateString(): string {
   return getWeekDayString;
 }
 </script>
-
-<template>
-  <article class="card">
-    <h3 class="datetime">
-      <time :datetime="weatherDate.toDateString()">{{ getDateString() }}</time>
-    </h3>
-    <WeatherIcon />
-    <p>{{ Math.round(cardData.temp) }} C</p>
-  </article>
-</template>
 
 <style scoped lang="scss">
 .card {

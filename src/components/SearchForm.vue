@@ -1,56 +1,3 @@
-<script setup lang="ts">
-import type { CityName } from "@/interfaces";
-import { ref, watch, type Ref, watchEffect, nextTick } from "vue";
-import { useWeatherStore } from "../stores/WeatherStore";
-import { getGeolocationsFromCityName } from "@/services/openWeatherAPI";
-
-const weatherStore = useWeatherStore();
-let cityName: Ref<string> = ref("");
-let isSearchExpanded: Ref<boolean> = ref(false);
-let cities: Ref<Array<CityName>> = ref([]);
-let search: any = ref(null);
-
-async function getCities(city: string) {
-  cities.value = (await getGeolocationsFromCityName(city)) || [];
-  console.log(cities.value[0]);
-}
-function getCountryName(countryCode: string): string {
-  // @ts-ignore
-  const regionNames = new Intl.DisplayNames(["en"], { type: "region" });
-  return regionNames.of(countryCode);
-}
-
-function onSubmit(): void {
-  const city: CityName = cities.value[0];
-  updateWeatherStoreData(city);
-}
-
-function toggleSearch(): void {
-  if (isSearchExpanded.value) {
-    isSearchExpanded.value = false;
-    return;
-  }
-
-  isSearchExpanded.value = true;
-  nextTick(() => search.value.focus());
-}
-
-async function updateWeatherStoreData(city: CityName) {
-  weatherStore.coordinates = {
-    longitude: city.lon,
-    latitude: city.lat,
-  };
-}
-
-watch(cityName, (city) => (city ? getCities(city) : (cities.value = [])));
-
-// watch(isSearchExpanded, (isSearchExpanded) => {
-//   if (!isSearchExpanded) return;
-//   setTimeout(() => {
-//     search.value.focus();
-//   }, 300);
-// });
-</script>
 <template>
   <div class="wrapper">
     <form
@@ -105,6 +52,55 @@ watch(cityName, (city) => (city ? getCities(city) : (cities.value = [])));
   </div>
 </template>
 
+<script setup lang="ts">
+import type { CityName } from "@/interfaces";
+import { ref, watch, type Ref, watchEffect, nextTick } from "vue";
+import { useWeatherStore } from "../stores/WeatherStore";
+import { getGeolocationsFromCityName } from "@/services/openWeatherAPI";
+
+const weatherStore = useWeatherStore();
+let cityName: Ref<string> = ref("");
+let isSearchExpanded: Ref<boolean> = ref(false);
+let cities: Ref<Array<CityName>> = ref([]);
+let search: any = ref(null);
+
+async function getCities(city: string) {
+  cities.value = (await getGeolocationsFromCityName(city)) || [];
+  console.log(cities.value[0]);
+}
+function getCountryName(countryCode: string): string {
+  // @ts-ignore
+  const regionNames = new Intl.DisplayNames(["en"], { type: "region" });
+  return regionNames.of(countryCode);
+}
+
+function onSubmit(): void {
+  const city: CityName = cities.value[0];
+  updateWeatherStoreData(city);
+}
+
+function toggleSearch(): void {
+  if (isSearchExpanded.value) {
+    isSearchExpanded.value = false;
+    return;
+  }
+
+  isSearchExpanded.value = true;
+  setTimeout(() => {
+    search.value.focus();
+  }, 300);
+}
+
+async function updateWeatherStoreData(city: CityName) {
+  weatherStore.coordinates = {
+    longitude: city.lon,
+    latitude: city.lat,
+  };
+}
+
+watch(cityName, (city) => (city ? getCities(city) : (cities.value = [])));
+</script>
+
 <style scoped lang="scss">
 .wrapper {
   height: 3em;
@@ -135,12 +131,12 @@ watch(cityName, (city) => (city ? getCities(city) : (cities.value = [])));
 }
 
 .search__field {
+  display: flex;
   background: none;
   font: inherit;
+  color: inherit;
   border: none;
   height: 100%;
-
-  border-left: 1px solid var(--text-color);
   &:focus {
     outline: none;
   }

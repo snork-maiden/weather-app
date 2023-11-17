@@ -1,11 +1,20 @@
+<template>
+  <ul class="weather-list">
+    <WeatherCard
+      v-for="weather of weathers"
+      :key="weather.dateTime"
+      :card-data="weather"
+    />
+  </ul>
+</template>
+
 <script setup lang="ts">
-/* __vue_virtual_code_placeholder__ */
 import type { ComputedRef, Ref } from "vue";
-import { useWeatherStore } from "../stores/WeatherStore";
 import { computed } from "vue";
 import type { WeatherCardData, WeatherForecastItem } from "@/interfaces";
-import WeatherCard from "./WeatherCard.vue";
 import { WeatherTypes } from "@/enums";
+import { useWeatherStore } from "@/stores/WeatherStore";
+import WeatherCard from "./WeatherCard.vue";
 
 const weatherStore = useWeatherStore();
 
@@ -30,7 +39,7 @@ function getHoursData(): Array<WeatherCardData> {
     const hourWeather: WeatherCardData = {
       main: weatherItem.weather[0].main,
       temp: weatherItem.main.temp,
-      datetime: weatherItem.dt,
+      dateTime: weatherItem.dt,
       description: weatherItem.weather[0].description,
       type: "hours",
     };
@@ -100,7 +109,7 @@ function getDaysData(): Array<WeatherCardData> {
       main: WeatherTypes[description],
       temp: maxTemp,
       minTemp,
-      datetime: timestamp,
+      dateTime: timestamp,
       description,
       type: "days",
     };
@@ -171,16 +180,6 @@ function getDaysData(): Array<WeatherCardData> {
   }
 }
 </script>
-
-<template>
-  <ul class="weather-list">
-    <WeatherCard
-      v-for="weather of weathers"
-      :key="weather.datetime"
-      :card-data="weather"
-    />
-  </ul>
-</template>
 
 <style scoped lang="scss">
 .weather-list {
