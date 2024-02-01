@@ -3,14 +3,14 @@
     <h3 class="datetime">
       <time :datetime="weatherDate.toDateString()">{{ getDateString() }}</time>
     </h3>
-    <WeatherIcon />
+    <WeatherIcon :weather="cardData.description"/>
     <p>{{ Math.round(cardData.temp) }} C</p>
   </article>
 </template>
 
 <script setup lang="ts">
 import type { WeatherCardData } from "@/interfaces";
-import WeatherIcon from "../icon/WeatherIcon.vue";
+import WeatherIcon from "./WeatherIcon.vue";
 import { ref, type Ref } from "vue";
 
 const props = defineProps<{

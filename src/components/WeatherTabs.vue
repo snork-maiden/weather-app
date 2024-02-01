@@ -1,6 +1,6 @@
 <template>
   <div class="weather-cards">
-    <div class="tabs">
+    <div class="WeatherTabs">
       <input
         type="radio"
         name="tab"
@@ -22,19 +22,19 @@
       <label for="week-view" class="tab-name">week</label>
     </div>
 
-    <WeatherList :current-tab="currentTab"></WeatherList>
+    <WeatherTabsList :current-tab="currentTab"></WeatherTabsList>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, type Ref } from "vue";
-import WeatherList from "./WeatherList.vue";
+import WeatherTabsList from "./WeatherTabsList.vue";
 
 let currentTab: Ref<"day" | "week"> = ref("day");
 </script>
 
 <style scoped lang="scss">
-.tabs {
+.WeatherTabs {
   display: flex;
 }
 .tab {

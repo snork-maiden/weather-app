@@ -1,14 +1,15 @@
 <template>
   {{ props.weather }}
-  <CloudIcon />
+  <WeatherIconCloud />
 </template>
 
 <script setup lang="ts">
 import type { WeatherTypes } from "@/enums";
-import CloudIcon from "./weatherIcons/CloudIcon.vue";
+import WeatherIconCloud from "./WeatherIconCloud.vue";
 
 const props = defineProps<{
   weather: keyof typeof WeatherTypes;
+  // skyColorName: 
 }>();
 </script>
 

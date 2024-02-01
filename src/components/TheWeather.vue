@@ -25,9 +25,11 @@
 <script setup lang="ts">
 import { WeatherTypes } from "@/enums";
 import { useWeatherStore } from "../stores/WeatherStore";
-import WeatherIcon from "./icon/WeatherIcon.vue";
 import { computed, watch } from "vue";
-import WeatherTabs from "./tabs/WeatherTabs.vue";
+import WeatherIcon from "./WeatherIcon.vue";
+import WeatherTabs from "./WeatherTabs.vue";
+
+type DayTimeName = "day" | "night" | "golden-hour";
 
 const weatherStore = useWeatherStore();
 weatherStore.fill();
@@ -38,7 +40,7 @@ function transformWeatherName(
   return WeatherTypes[weather] || "";
 }
 
-const skyColorName = computed(calculateSkyColorName);
+const skyColorName = computed(calculateCurrentDateTimeName);
 
 const weatherDescription = computed(() => {
   if (!weatherStore.weather?.weather) {
@@ -47,40 +49,45 @@ const weatherDescription = computed(() => {
   return weatherStore.weather.weather[0].description;
 });
 
-function calculateSkyColorName(): "day" | "night" | "golden-hour" {
+function calculateCurrentDateTimeName(): DayTimeName {
   const currentTimestampInMs = new Date().getTime();
   const currentTimestamp = currentTimestampInMs / 1000;
-  if (
-    !(weatherStore.weather?.sys?.sunrise || weatherStore.weather?.sys?.sunset)
-  ) {
-    const hours = new Date(currentTimestamp * 1000).getHours();
+
+  return calculateDateTimeName(
+    currentTimestamp,
+    weatherStore.weather?.sys?.sunrise || null,
+    weatherStore.weather?.sys?.sunset || null
+  );
+}
+
+function calculateDateTimeName(
+  timestampInS: number,
+  sunriseTimestamp: number | null = null,
+  sunsetTimestamp: number | null = null
+): DayTimeName {
+  if (sunsetTimestamp === null || sunriseTimestamp === null) {
+    const hours = new Date(timestampInS * 1000).getHours();
     if (hours > 21 || hours < 6) return "night";
     return "day";
   }
 
-  const sunriseTimestamp: number = weatherStore.weather.sys.sunrise;
-  const sunsetTimestamp: number = weatherStore.weather.sys.sunset;
-
   const halfAnHourInSec = 30 * 60;
-  console.log(sunsetTimestamp - currentTimestamp);
+  console.log(sunsetTimestamp - timestampInS);
   if (
-    Math.abs(sunriseTimestamp - currentTimestamp) <= halfAnHourInSec ||
-    Math.abs(sunsetTimestamp - currentTimestamp) <= halfAnHourInSec
+    Math.abs(sunriseTimestamp - timestampInS) <= halfAnHourInSec ||
+    Math.abs(sunsetTimestamp - timestampInS) <= halfAnHourInSec
   ) {
     return "golden-hour";
   }
 
-  if (
-    currentTimestamp > sunriseTimestamp &&
-    currentTimestamp < sunsetTimestamp
-  ) {
+  if (timestampInS > sunriseTimestamp && timestampInS < sunsetTimestamp) {
     return "day";
   }
 
   return "night";
 }
 
-watch(calculateSkyColorName, () => {
+watch(calculateCurrentDateTimeName, () => {
   document.body.className = "";
   document.body.classList.add(skyColorName.value);
 });

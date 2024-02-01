@@ -1,6 +1,6 @@
 <template>
   <ul class="weather-list">
-    <WeatherCard
+    <WeatherTabsCard
       v-for="weather of weathers"
       :key="weather.dateTime"
       :card-data="weather"
@@ -14,7 +14,7 @@ import { computed } from "vue";
 import type { WeatherCardData, WeatherForecastItem } from "@/interfaces";
 import { WeatherTypes } from "@/enums";
 import { useWeatherStore } from "@/stores/WeatherStore";
-import WeatherCard from "./WeatherCard.vue";
+import WeatherTabsCard from "./WeatherTabsCard.vue";
 
 const weatherStore = useWeatherStore();
 

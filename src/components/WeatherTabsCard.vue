@@ -11,7 +11,7 @@
 <script setup lang="ts">
 import type { WeatherCardData } from "@/interfaces";
 import { ref, type Ref } from "vue";
-import WeatherIcon from "../icon/WeatherIcon.vue";
+import WeatherIcon from "./WeatherIcon.vue";
 const props = defineProps<{
   cardData: WeatherCardData;
 }>();
