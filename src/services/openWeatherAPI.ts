@@ -5,16 +5,19 @@ import type {
   WeatherForecastItem,
 } from "@/interfaces";
 
-const APIkey = "befbb98322b707ea44a5577b13b8c97f";
+const APIkey = import.meta.env.VITE_WEATHER_API_KEY;
 const baseURL = "https://api.openweathermap.org";
 
 export async function getGeolocationsFromCityName(
-  city: string
+  city: string,
 ): Promise<Array<CityName> | null> {
+  if (!APIkey) {
+    throw new Error("VITE_WEATHER_API_KEY is not defined");
+  }
   const url = new URL("geo/1.0/direct", baseURL);
   url.searchParams.set("q", city);
   url.searchParams.set("limit", "7");
-  url.searchParams.set("appid", APIkey.toString());
+  url.searchParams.set("appid", APIkey);
 
   const response = await fetch(url);
   if (response.ok) {
@@ -27,7 +30,7 @@ export async function getGeolocationsFromCityName(
 
 export async function getCurrentWeather(
   latitude: number,
-  longitude: number
+  longitude: number,
 ): Promise<Weather | null> {
   const url = new URL("data/2.5/weather", baseURL);
   setWeatherSearchParams(url, latitude, longitude);
@@ -44,7 +47,7 @@ export async function getCurrentWeather(
 
 export async function getForecast(
   latitude: number,
-  longitude: number
+  longitude: number,
 ): Promise<Forecast | null> {
   const url = new URL("data/2.5/forecast", baseURL);
   setWeatherSearchParams(url, latitude, longitude);
