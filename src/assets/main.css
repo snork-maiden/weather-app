@@ -1,0 +1,80 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  font-weight: normal;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  min-height: 100vh;
+  width: 80vw;
+  padding: 1em 1.3em;
+  background: var(--background);
+  transition: color 0.5s, background-color 0.5s;
+  line-height: normal;
+  color: var(--text-color);
+  font-family: "Quicksand", sans-serif;
+  font-size: 20px;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+:root {
+  --background: var(---day-background);
+  --card-background: var(--card-day-background)
+  --sun-color: var(--day-sun);
+  --moon-color: var(---day-background);
+  --cloud-color: var(--day-cloud);
+  --text-color: var(--day-text-color);
+  --card-day-background: rgb(195, 237, 255);
+  --card-night-background:rgba(10, 56, 71, 1);
+  --card-golden-hour-background: rgba(161, 43, 78, 1);
+  --day-text-color: rgba(39, 41, 42, 1);
+  --night-text-color: rgb(241, 240, 234);
+  --day-sun: #F2B02E;
+  --golden-hour-sun: var(--card-golden-hour-background);
+  --day-cloud: #8DDEEB;
+  --night-cloud: var(--day-cloud);
+  --golden-hour-cloud: rgba(217, 89, 79, 1);
+  ---day-background: rgb(241, 240, 234);
+  ---golden-hour-background: rgba(255, 189, 184, 1);
+  ---night-background: rgba(22, 61, 93, 1);
+}
+
+:root .day {
+  --background: var(---day-background);
+  --card-background: var(--card-day-background);
+  --sun-color: var(--day-sun);
+  --cloud-color: var(--day-cloud);
+  --text-color: var(--day-text-color) ;
+}
+
+:root .golden-hour {
+  --background: var(---golden-hour-background);
+  --card-background: var(--card-golden-hour-background);
+  --sun-color: var(--golden-hour-sun);
+  --cloud-color: var(--golden-hour-cloud);
+  --text-color: var(--day-text-color);
+}
+
+:root .night {
+  --background: var(---night-background);
+  --card-background: var(--card-night-background);
+  --sun-color: var(--day-sun);
+  --cloud-color: var(--night-cloud);
+  --text-color: var(--night-text-color);
+}
+
+#app {
+  max-width: 1480px;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  font-weight: normal;
+}/*# sourceMappingURL=main.css.map */

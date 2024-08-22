@@ -1,6 +1,8 @@
 <template>
-  {{ props.weather }}
-  <WeatherIconCloud />
+  <div class="wrapper">
+    {{ props.weather }}
+    <WeatherIconCloud />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -13,10 +15,16 @@ const props = defineProps<{
 }>();
 </script>
 
-<!-- <style>
-svg {
-  fill: var(--cloud-color);
-  width: 250px;
-  height: 250px;
+<style scoped lang="scss">
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
 }
-</style> -->
+
+.wrapper svg {
+  height: 36px;
+}
+</style>

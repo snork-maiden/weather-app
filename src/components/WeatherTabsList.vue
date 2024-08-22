@@ -1,6 +1,13 @@
 <template>
-  <ul class="weather-list">
-    <WeatherTabsCard
+  <ul class="weather-list" v-if="currentTab === 'week'">
+    <WeatherTabsCardWeek
+      v-for="weather of weathers"
+      :key="weather.dateTime"
+      :card-data="weather"
+    />
+  </ul>
+  <ul class="weather-list" v-else>
+    <WeatherTabsCardDay
       v-for="weather of weathers"
       :key="weather.dateTime"
       :card-data="weather"
@@ -14,7 +21,8 @@ import { computed } from "vue";
 import type { WeatherCardData, WeatherForecastItem } from "@/interfaces";
 import { WeatherTypes } from "@/enums";
 import { useWeatherStore } from "@/stores/WeatherStore";
-import WeatherTabsCard from "./WeatherTabsCard.vue";
+import WeatherTabsCardDay from "./WeatherTabsCardDay.vue";
+import WeatherTabsCardWeek from "./WeatherTabsCardWeek.vue";
 
 const weatherStore = useWeatherStore();
 
@@ -27,7 +35,7 @@ const props = defineProps<{
 }>();
 
 const weathers: ComputedRef<Array<WeatherCardData>> = computed(() =>
-  props.currentTab === "day" ? getHoursData() : getDaysData()
+  props.currentTab === "day" ? getHoursData() : getDaysData(),
 );
 
 function getHoursData(): Array<WeatherCardData> {
@@ -62,13 +70,13 @@ function getDaysData(): Array<WeatherCardData> {
   let daysData: Array<WeatherCardData> = [];
 
   weathersByDays.forEach((weathers, timestamp) =>
-    addWeatherCard(weathers, timestamp)
+    addWeatherCard(weathers, timestamp),
   );
 
   return daysData;
 
   function getWeatherByDays(
-    weathers: Array<WeatherForecastItem>
+    weathers: Array<WeatherForecastItem>,
   ): Map<number, Array<WeatherForecastItem>> {
     let weathersByDays = new Map<number, Array<WeatherForecastItem>>();
 
@@ -97,7 +105,7 @@ function getDaysData(): Array<WeatherCardData> {
 
   function addWeatherCard(
     weathers: Array<WeatherForecastItem>,
-    timestamp: number
+    timestamp: number,
   ): void {
     const description = getDescription(weathers);
 
@@ -118,7 +126,7 @@ function getDaysData(): Array<WeatherCardData> {
     return;
 
     function getDescription(
-      weathers: Array<WeatherForecastItem>
+      weathers: Array<WeatherForecastItem>,
     ): keyof typeof WeatherTypes {
       const daytimeWeathers = weathers.filter((item) => {
         let time = new Date(item.dt).getHours();
@@ -133,7 +141,7 @@ function getDaysData(): Array<WeatherCardData> {
       return description;
 
       function calculatePrecipitation(
-        weathers: Array<WeatherForecastItem>
+        weathers: Array<WeatherForecastItem>,
       ): keyof typeof WeatherTypes | null {
         return (
           checkWeather("thunderstorm") ??
@@ -144,17 +152,17 @@ function getDaysData(): Array<WeatherCardData> {
         );
 
         function checkWeather(
-          weatherType: keyof typeof WeatherTypes
+          weatherType: keyof typeof WeatherTypes,
         ): keyof typeof WeatherTypes | null {
           const findWeatherType = weathers.find(
-            (weather) => weather.weather[0].description === weatherType
+            (weather) => weather.weather[0].description === weatherType,
           );
           return findWeatherType ? weatherType : null;
         }
       }
 
       function calculateClouds(
-        weathers: Array<WeatherForecastItem>
+        weathers: Array<WeatherForecastItem>,
       ): keyof typeof WeatherTypes {
         const clouds = weathers.map((weather) => weather.clouds.all);
         const averageClouds =
@@ -167,11 +175,11 @@ function getDaysData(): Array<WeatherCardData> {
       }
 
       function calculateMist(
-        weathers: Array<WeatherForecastItem>
+        weathers: Array<WeatherForecastItem>,
       ): keyof typeof WeatherTypes | null {
         const mists = weathers.filter(
           (weather: WeatherForecastItem) =>
-            weather.weather[0].description === "mist"
+            weather.weather[0].description === "mist",
         );
 
         return weathers.length - mists.length <= 3 ? "mist" : null;
@@ -184,5 +192,6 @@ function getDaysData(): Array<WeatherCardData> {
 <style scoped lang="scss">
 .weather-list {
   display: flex;
+  width: 100%;
 }
 </style>

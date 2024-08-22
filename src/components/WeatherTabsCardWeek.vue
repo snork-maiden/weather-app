@@ -3,8 +3,8 @@
     <h3 class="datetime">
       <time :datetime="weatherDate.toDateString()">{{ getDateString() }}</time>
     </h3>
-    <WeatherIcon :weather="cardData.description" />
-    <p>{{ Math.round(cardData.temp) }} C</p>
+    <WeatherIcon :weather="cardData.description" class="icon" />
+    <p>{{ Math.round(cardData.temp) }}°C</p>
   </article>
 </template>
 
@@ -33,13 +33,9 @@ function getDateString(): string {
 <style scoped lang="scss">
 .card {
   border: 1px solid var(--text-color);
-  flex-grow: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-.card svg {
-  width: 70px;
-  height: 70px;
+  background-color: var(--card-day-background);
 }
 </style>

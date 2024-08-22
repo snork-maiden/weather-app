@@ -1,6 +1,15 @@
 <template>
   <div class="weather-cards">
-    <div class="WeatherTabs">
+    <div class="weather-tabs">
+      <input
+        type="radio"
+        name="tab"
+        id="week-view"
+        value="week"
+        class="tab"
+        v-model="currentTab"
+      />
+      <label for="week-view" class="tab-name">week</label>
       <input
         type="radio"
         name="tab"
@@ -11,15 +20,6 @@
         v-model="currentTab"
       />
       <label for="day-view" class="tab-name">day</label>
-      <input
-        type="radio"
-        name="tab"
-        id="week-view"
-        value="week"
-        class="tab"
-        v-model="currentTab"
-      />
-      <label for="week-view" class="tab-name">week</label>
     </div>
 
     <WeatherTabsList :current-tab="currentTab"></WeatherTabsList>
@@ -34,16 +34,21 @@ let currentTab: Ref<"day" | "week"> = ref("day");
 </script>
 
 <style scoped lang="scss">
-.WeatherTabs {
+.weather-cards {
   display: flex;
+  flex-direction: column;
+  max-width: 600px;
+}
+.weather-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
 .tab {
   display: none;
 }
 .tab-name {
-  flex-grow: 1;
   text-align: center;
-  padding: 5px 0;
+  padding: 5px;
   border: 1px solid var(--text-color);
   border-bottom: none;
 }
