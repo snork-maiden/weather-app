@@ -83,9 +83,3 @@ export interface CityCoordinates {
   latitude: number;
   longitude: number;
 }
-
-export interface Data {
-  coordinates: CityCoordinates | null;
-  forecast: Forecast | null;
-  weather: Weather | null;
-}

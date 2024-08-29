@@ -45,7 +45,7 @@ export async function getCurrentWeather(
   return null;
 }
 
-export async function getForecast(
+export async function fetchForecastData(
   latitude: number,
   longitude: number,
 ): Promise<Forecast | null> {

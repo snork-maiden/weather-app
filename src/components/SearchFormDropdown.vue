@@ -8,13 +8,6 @@ defineProps<{
 
 const weatherStore = useWeatherStore();
 
-function updateWeatherStoreData(city: CityName) {
-  weatherStore.coordinates = {
-    longitude: city.lon,
-    latitude: city.lat,
-  };
-}
-
 const regionNames = new Intl.DisplayNames(["en"], { type: "region" });
 function cityString(city: CityName): string {
   const countryName = regionNames.of(city.country);
@@ -26,7 +19,7 @@ function cityString(city: CityName): string {
 
 <template>
   <ul class="options" v-for="city in cities" :key="city.id">
-    <li class="option" @click="updateWeatherStoreData(city)">
+    <li class="option" @click="weatherStore.setCoordinates(city.lat, city.lon)">
       {{ cityString(city) }}
     </li>
   </ul>

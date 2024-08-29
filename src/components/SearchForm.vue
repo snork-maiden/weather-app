@@ -51,7 +51,7 @@ async function getCities(city: string) {
 
 function onSubmit(): void {
   const city: CityName = cities.value[0];
-  updateWeatherStoreData(city);
+  weatherStore.setCoordinates(city.lat, city.lon);
 }
 
 function toggleSearch(): void {
@@ -64,13 +64,6 @@ function toggleSearch(): void {
   setTimeout(() => {
     search.value.focus();
   }, 300);
-}
-
-function updateWeatherStoreData(city: CityName) {
-  weatherStore.coordinates = {
-    longitude: city.lon,
-    latitude: city.lat,
-  };
 }
 
 watch(cityName, (city) => (city ? getCities(city) : (cities.value = [])));
