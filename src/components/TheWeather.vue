@@ -9,8 +9,8 @@
     <div class="description">
       <div class="temperature">
         {{
-          weatherStore.weather?.main.temp
-            ? Math.round(weatherStore.weather?.main.temp)
+          weatherStore.currentWeather?.main.temp
+            ? Math.round(weatherStore.currentWeather?.main.temp)
             : 0
         }}°C
       </div>
@@ -25,17 +25,22 @@
 <script setup lang="ts">
 import { WeatherTypes } from "@/enums";
 import { useWeatherStore } from "../stores/WeatherStore";
-import { computed, watch } from "vue";
+import { computed, onMounted, watch } from "vue";
 import WeatherIcon from "./WeatherIcon.vue";
 import WeatherTabs from "./WeatherTabs.vue";
+import { getCurrentCityByGeolocation } from "@/services/geoAPI";
 
 type DayTimeName = "day" | "night" | "golden-hour";
 
 const weatherStore = useWeatherStore();
-weatherStore.fill();
+
+onMounted(async () => {
+  const location = await getCurrentCityByGeolocation();
+  weatherStore.setCoordinates(location.latitude, location.longitude);
+});
 
 function transformWeatherName(
-  weather: keyof typeof WeatherTypes
+  weather: keyof typeof WeatherTypes,
 ): WeatherTypes {
   return WeatherTypes[weather] || "";
 }
@@ -43,10 +48,10 @@ function transformWeatherName(
 const skyColorName = computed(calculateCurrentDateTimeName);
 
 const weatherDescription = computed(() => {
-  if (!weatherStore.weather?.weather) {
+  if (!weatherStore.currentWeather?.weather) {
     return "mist";
   }
-  return weatherStore.weather.weather[0].description;
+  return weatherStore.currentWeather.weather[0].description;
 });
 
 function calculateCurrentDateTimeName(): DayTimeName {
@@ -55,15 +60,15 @@ function calculateCurrentDateTimeName(): DayTimeName {
 
   return calculateDateTimeName(
     currentTimestamp,
-    weatherStore.weather?.sys?.sunrise || null,
-    weatherStore.weather?.sys?.sunset || null
+    weatherStore.currentWeather?.sys?.sunrise || null,
+    weatherStore.currentWeather?.sys?.sunset || null,
   );
 }
 
 function calculateDateTimeName(
   timestampInS: number,
   sunriseTimestamp: number | null = null,
-  sunsetTimestamp: number | null = null
+  sunsetTimestamp: number | null = null,
 ): DayTimeName {
   if (sunsetTimestamp === null || sunriseTimestamp === null) {
     const hours = new Date(timestampInS * 1000).getHours();

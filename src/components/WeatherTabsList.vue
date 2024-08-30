@@ -1,12 +1,12 @@
 <template>
-  <ul class="weather-list" v-if="currentTab === 'week'">
+  <ul class="weather-list" v-show="currentTab === 'week'">
     <WeatherTabsCardWeek
       v-for="weather of weathers"
       :key="weather.dateTime"
       :card-data="weather"
     />
   </ul>
-  <ul class="weather-list" v-else>
+  <ul class="weather-list" v-show="currentTab === 'day'">
     <WeatherTabsCardDay
       v-for="weather of weathers"
       :key="weather.dateTime"

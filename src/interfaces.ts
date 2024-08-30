@@ -9,7 +9,7 @@ export interface CityName {
   id: number;
 }
 
-export interface Weather {
+export interface CurrentWeather {
   clouds: { all: number };
   id: number;
   dt: number;
@@ -63,7 +63,7 @@ export interface Forecast {
   [propName: string]: any;
 }
 
-export interface WeatherForecastItem extends Weather {
+export interface WeatherForecastItem extends CurrentWeather {
   dt: number;
   dt_txt: string;
   pop: number;
@@ -82,4 +82,10 @@ export interface WeatherCardData {
 export interface CityCoordinates {
   latitude: number;
   longitude: number;
+}
+
+export interface WeatherData {
+  coordinates: CityCoordinates | null;
+  forecast: Forecast | null;
+  currentWeather: CurrentWeather | null;
 }

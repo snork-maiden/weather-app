@@ -1,53 +1,49 @@
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { defineStore } from "pinia";
-import type { CityCoordinates, Forecast, Weather } from "@/interfaces";
-import { getCurrentCityByGeolocation } from "@/services/geoAPI";
+import type { WeatherData } from "@/interfaces";
+
 import {
   getCurrentWeather,
   fetchForecastData,
 } from "@/services/openWeatherAPI";
 
 export const useWeatherStore = defineStore("WeatherStore", () => {
-  // State
-  const coordinates = ref<CityCoordinates | null>(null);
-  const forecast = ref<Forecast | null>(null);
-  const weather = ref<Weather | null>(null);
+  const weatherData = ref<WeatherData>({
+    coordinates: null,
+    forecast: null,
+    currentWeather: null,
+  });
 
-  // Actions
-  async function fill() {
-    const location = await getCurrentCityByGeolocation();
-    coordinates.value = location;
-
-    weather.value = await getCurrentWeather(
-      location.latitude,
-      location.longitude,
-    );
-
-    forecast.value = await fetchForecastData(
-      location.latitude,
-      location.longitude,
-    );
-  }
-
-  const getForecast = computed(() => forecast.value);
-  const getWeather = computed(() => weather.value);
-  const currentCityName = computed(() => weather.value?.name || "");
+  const coordinates = computed(() => weatherData.value.coordinates);
+  const forecast = computed(() => weatherData.value.forecast);
+  const currentWeather = computed(() => weatherData.value.currentWeather);
+  const currentCityName = computed(() => currentWeather.value?.name || "");
   const isLoading = computed(() => !!coordinates.value);
 
   function setCoordinates(latitude: number, longitude: number) {
-    coordinates.value = {
+    weatherData.value.coordinates = {
       latitude,
       longitude,
     };
   }
 
+  watch(coordinates, async (coordinates) => {
+    if (!coordinates) return;
+    weatherData.value.currentWeather = await getCurrentWeather(
+      coordinates.latitude,
+      coordinates.longitude,
+    );
+
+    weatherData.value.forecast = await fetchForecastData(
+      coordinates.latitude,
+      coordinates.longitude,
+    );
+  });
+
   return {
     coordinates,
     forecast,
-    weather,
-    fill,
-    getForecast,
-    getWeather,
+    currentWeather,
     currentCityName,
     isLoading,
     setCoordinates,

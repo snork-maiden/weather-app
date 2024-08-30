@@ -1,6 +1,6 @@
 import type {
   CityName,
-  Weather,
+  CurrentWeather,
   Forecast,
   WeatherForecastItem,
 } from "@/interfaces";
@@ -31,7 +31,7 @@ export async function getGeolocationsFromCityName(
 export async function getCurrentWeather(
   latitude: number,
   longitude: number,
-): Promise<Weather | null> {
+): Promise<CurrentWeather | null> {
   const url = new URL("data/2.5/weather", baseURL);
   setWeatherSearchParams(url, latitude, longitude);
 
