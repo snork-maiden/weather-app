@@ -29,11 +29,10 @@ import { computed, onMounted, watch } from "vue";
 import WeatherIcon from "./WeatherIcon.vue";
 import WeatherTabs from "./WeatherTabs.vue";
 import { getCurrentCityByGeolocation } from "@/services/geoAPI";
-
-type DayTimeName = "day" | "night" | "golden-hour";
+import { useSkyColor } from "@/composables/useSkyColor";
 
 const weatherStore = useWeatherStore();
-
+const { skyColorName } = useSkyColor();
 onMounted(async () => {
   const location = await getCurrentCityByGeolocation();
   weatherStore.setCoordinates(location.latitude, location.longitude);
@@ -45,8 +44,6 @@ function transformWeatherName(
   return WeatherTypes[weather] || "";
 }
 
-const skyColorName = computed(calculateCurrentDateTimeName);
-
 const weatherDescription = computed(() => {
   if (!weatherStore.currentWeather?.weather) {
     return "mist";
@@ -54,45 +51,7 @@ const weatherDescription = computed(() => {
   return weatherStore.currentWeather.weather[0].description;
 });
 
-function calculateCurrentDateTimeName(): DayTimeName {
-  const currentTimestampInMs = new Date().getTime();
-  const currentTimestamp = currentTimestampInMs / 1000;
-
-  return calculateDateTimeName(
-    currentTimestamp,
-    weatherStore.currentWeather?.sys?.sunrise || null,
-    weatherStore.currentWeather?.sys?.sunset || null,
-  );
-}
-
-function calculateDateTimeName(
-  timestampInS: number,
-  sunriseTimestamp: number | null = null,
-  sunsetTimestamp: number | null = null,
-): DayTimeName {
-  if (sunsetTimestamp === null || sunriseTimestamp === null) {
-    const hours = new Date(timestampInS * 1000).getHours();
-    if (hours > 21 || hours < 6) return "night";
-    return "day";
-  }
-
-  const halfAnHourInSec = 30 * 60;
-  console.log(sunsetTimestamp - timestampInS);
-  if (
-    Math.abs(sunriseTimestamp - timestampInS) <= halfAnHourInSec ||
-    Math.abs(sunsetTimestamp - timestampInS) <= halfAnHourInSec
-  ) {
-    return "golden-hour";
-  }
-
-  if (timestampInS > sunriseTimestamp && timestampInS < sunsetTimestamp) {
-    return "day";
-  }
-
-  return "night";
-}
-
-watch(calculateCurrentDateTimeName, () => {
+watch(skyColorName, () => {
   document.body.className = "";
   document.body.classList.add(skyColorName.value);
 });
