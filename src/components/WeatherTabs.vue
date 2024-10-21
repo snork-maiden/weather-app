@@ -22,15 +22,39 @@
       <label for="day-view" class="tab-name">day</label>
     </div>
 
-    <WeatherTabsList :current-tab="currentTab"></WeatherTabsList>
+    <ul class="weather-list" v-show="currentTab === 'week'">
+      <li
+        class="weather-item"
+        v-for="weather of weekForecast"
+        :key="weather.dateTime"
+      >
+        <WeatherTabsCardWeek :card-data="weather" />
+      </li>
+    </ul>
+    <ul class="weather-list" v-show="currentTab === 'day'">
+      <li
+        class="weather-item"
+        v-for="weather of weekForecast"
+        :key="weather.dateTime"
+      >
+        <!-- <WeatherTabsCardDay :card-data="weather" /> -->
+      </li>
+    </ul>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, type Ref } from "vue";
-import WeatherTabsList from "./WeatherTabsList.vue";
+import { computed, type ModelRef } from "vue";
+import WeatherTabsCardWeek from "./WeatherTabsCardWeek.vue";
+import { useWeatherStore } from "@/stores/WeatherStore";
+import { getDaysData } from "@/utils/forecastUtils";
 
-let currentTab: Ref<"day" | "week"> = ref("day");
+const currentTab: ModelRef<string, "day" | "week"> = defineModel({
+  default: "day",
+});
+const weatherStore = useWeatherStore();
+
+const weekForecast = computed(() => getDaysData(weatherStore.forecastData!));
 </script>
 
 <style scoped lang="scss">
@@ -62,5 +86,11 @@ let currentTab: Ref<"day" | "week"> = ref("day");
 }
 .weather-cards {
   width: 80vw;
+}
+
+.weather-list {
+  display: grid;
+  list-style: none;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 </style>

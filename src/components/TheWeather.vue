@@ -25,18 +25,13 @@
 <script setup lang="ts">
 import { WeatherTypes } from "@/enums";
 import { useWeatherStore } from "../stores/WeatherStore";
-import { computed, onMounted, watch } from "vue";
+import { computed, watch } from "vue";
 import WeatherIcon from "./WeatherIcon.vue";
 import WeatherTabs from "./WeatherTabs.vue";
-import { getCurrentCityByGeolocation } from "@/services/geoAPI";
 import { useSkyColor } from "@/composables/useSkyColor";
 
 const weatherStore = useWeatherStore();
 const { skyColorName } = useSkyColor();
-onMounted(async () => {
-  const location = await getCurrentCityByGeolocation();
-  weatherStore.setCoordinates(location.latitude, location.longitude);
-});
 
 function transformWeatherName(
   weather: keyof typeof WeatherTypes,

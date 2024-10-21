@@ -18,7 +18,13 @@ export const useWeatherStore = defineStore("WeatherStore", () => {
   const forecast = computed(() => weatherData.value.forecast);
   const currentWeather = computed(() => weatherData.value.currentWeather);
   const currentCityName = computed(() => currentWeather.value?.name || "");
-  const isLoading = computed(() => !!coordinates.value);
+  const isLoading = computed(() => !forecast.value);
+  const forecastData = computed(() => {
+    if (!forecast.value?.list) return null;
+    return forecast.value.list.filter(
+      (item) => new Date(item.dt).getDate() !== new Date().getDate(),
+    );
+  });
 
   function setCoordinates(latitude: number, longitude: number) {
     weatherData.value.coordinates = {
@@ -46,6 +52,7 @@ export const useWeatherStore = defineStore("WeatherStore", () => {
     currentWeather,
     currentCityName,
     isLoading,
+    forecastData,
     setCoordinates,
   };
 });

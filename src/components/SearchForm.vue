@@ -39,14 +39,13 @@ import IconSearch from "./icons/IconSearch.vue";
 import SearchFormDropdown from "./SearchFormDropdown.vue";
 
 const weatherStore = useWeatherStore();
-let cityName: Ref<string> = ref("");
+let cityName = defineModel({ default: "" });
 let isSearchExpanded: Ref<boolean> = ref(false);
 let cities: Ref<Array<CityName>> = ref([]);
 let search: any = ref(null);
 
 async function getCities(city: string) {
   cities.value = (await getGeolocationsFromCityName(city)) || [];
-  console.log(cities.value[0]);
 }
 
 function onSubmit(): void {
